@@ -1,7 +1,7 @@
 function varargout = svca4_mainGui(varargin)
 % SVCA4_MAINGUI MATLAB code for svca4_mainGui.fig
 
-% Last Modified by GUIDE v2.5 23-Jan-2017 15:53:29
+% Last Modified by GUIDE v2.5 03-Mar-2017 09:36:01
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -273,3 +273,57 @@ global svca4
 if exist('svca4','var')
     svca4_compareTacsGui(svca4)
 end
+
+
+% --- Executes on button press in bp_voi.
+function bp_voi_Callback(hObject, eventdata, handles)
+% This call will create a table containing the average BP value for
+% each VOIs and each subject.
+global svca4
+
+% get the BP image files to work on
+if get(hObject,'Value') == 1
+    [bp_list, bp_dir] = uigetfile(fullfile(svca4.outputPath, '*.nii;*.nii.gz'),'Select the BP images','MultiSelect','on');
+end
+hObject.Value = 0;
+
+% get an output name for the results table
+outName = inputdlg('output file name?');
+
+% load all label names
+load(fullfile(fileparts(which('svca4_mainGui')),'freeLabels.mat'))
+
+for i = 1:length(bp_list)
+    
+    % find BP image for current subject
+    subj = svca4.Names{i};
+    ind = strfind(bp_list, subj);
+    ind = find(not(cellfun('isempty', ind)));
+    bpf = bp_list{ind};
+    
+    %%% load all BP image %%%
+    BP_struct = load_nii([bp_dir bpf]);
+    BP = single(BP_struct.img);
+    
+    %%% load all VOIs %%%
+    VOI_struct = load_nii([svca4.SUBJECTS_DIR filesep subj filesep 'label' filesep subj '_AparcAseg_in_PET.nii.gz']);
+    VOI = single(VOI_struct.img);
+    VOInums = unique(VOI);
+    VOInums = VOInums(VOInums > 0);
+    nVOIs = length(VOInums);
+    
+    % get mean of each VOI
+    count = 1;
+    for v = 1:nVOIs
+        % not all aubjects have exactly the same labels eg the 5th ventricle
+        % so I use the loaded label list which contains the important ones
+        if ismember(VOInums(v),labels.LabelNumber) 
+            indVOI = find(VOI==VOInums(v));
+            
+            bp_voi(i,count) = mean(BP(indVOI));
+            count = count+1;
+        end
+    end
+end
+bpTable = array2table(bp_voi,'variablenames',labels.Region);
+uisave(bpTable,outName)
