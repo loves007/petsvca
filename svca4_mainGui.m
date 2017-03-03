@@ -1,7 +1,7 @@
 function varargout = svca4_mainGui(varargin)
 % SVCA4_MAINGUI MATLAB code for svca4_mainGui.fig
 
-% Last Modified by GUIDE v2.5 03-Mar-2017 09:36:01
+% Last Modified by GUIDE v2.5 03-Mar-2017 14:12:29
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -286,7 +286,6 @@ if get(hObject,'Value') == 1
     %[bp_list, bp_dir] = uigetfile(fullfile(svca4.outputPath, '*.nii;*.nii.gz'),'Select the BP images','MultiSelect','on');
     bp_list = uipickfiles('FilterSpec',[svca4.outputPath]);
 end
-hObject.Value = 0;
 
 % get an output name for the results table
 outName = inputdlg('output file name?');
@@ -318,7 +317,7 @@ for i = 1:length(bp_list)
     for v = 1:nVOIs
         % not all aubjects have exactly the same labels eg the 5th ventricle
         % so I use the loaded label list which contains the important ones
-        if ismember(VOInums(v),labels.LabelNumber) 
+        if ismember(VOInums(v),labels.LabelNumber)
             indVOI = find(VOI==VOInums(v));
             
             bp_voi(i,count) = mean(BP(indVOI));
@@ -328,3 +327,25 @@ for i = 1:length(bp_list)
 end
 bpTable = array2table(bp_voi,'variablenames',labels.Region);
 uisave('bpTable',outName{1})
+
+% --- Executes on button press in copy_header.
+function copy_header_Callback(hObject, eventdata, handles)
+global svca4
+
+choice = questdlg('This will write over the orginal files! Do you want to continue?','','Yes','No','No');
+switch choice
+    case 'Yes'
+        % get the BP image files to work on
+        if get(hObject,'Value') == 1
+            ref_file = uipickfiles('FilterSpec',[svca4.outputPath],'Prompt','Select one reference image.');
+            change_files = uipickfiles('FilterSpec',[svca4.outputPath],'Prompt','Select all images to change their header.');
+        end
+        
+        orig = load_untouch_nii(ref_file{1});
+        for i = 1:length(change_files)
+            change = load_untouch_nii(change_files{i});
+            out = orig;
+            out.img = change.img;
+            save_untouch_nii(out,change_files{i})
+        end
+end
