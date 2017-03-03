@@ -283,7 +283,8 @@ global svca4
 
 % get the BP image files to work on
 if get(hObject,'Value') == 1
-    [bp_list, bp_dir] = uigetfile(fullfile(svca4.outputPath, '*.nii;*.nii.gz'),'Select the BP images','MultiSelect','on');
+    %[bp_list, bp_dir] = uigetfile(fullfile(svca4.outputPath, '*.nii;*.nii.gz'),'Select the BP images','MultiSelect','on');
+    bp_list = uipickfiles('FilterSpec',[svca4.outputPath]);
 end
 hObject.Value = 0;
 
@@ -302,7 +303,7 @@ for i = 1:length(bp_list)
     bpf = bp_list{ind};
     
     %%% load all BP image %%%
-    BP_struct = load_nii([bp_dir bpf]);
+    BP_struct = load_nii(bpf);
     BP = single(BP_struct.img);
     
     %%% load all VOIs %%%
