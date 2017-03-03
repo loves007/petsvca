@@ -1,7 +1,7 @@
 function varargout = svca4_mainGui(varargin)
 % SVCA4_MAINGUI MATLAB code for svca4_mainGui.fig
 
-% Last Modified by GUIDE v2.5 03-Mar-2017 14:12:29
+% Last Modified by GUIDE v2.5 03-Mar-2017 16:09:53
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -353,3 +353,12 @@ switch choice
             save_untouch_nii(out,change_files{i})
         end
 end
+
+
+% --- Executes on button press in corr_bp.
+function corr_bp_Callback(hObject, eventdata, handles)
+
+
+% --- Executes on button press in plot_BP.
+function plot_BP_Callback(hObject, eventdata, handles)
+
