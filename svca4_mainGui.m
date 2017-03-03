@@ -326,4 +326,4 @@ for i = 1:length(bp_list)
     end
 end
 bpTable = array2table(bp_voi,'variablenames',labels.Region);
-uisave(bpTable,outName)
+uisave('bpTable',outName{1})
