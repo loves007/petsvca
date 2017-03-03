@@ -284,11 +284,15 @@ global svca4
 % get the BP image files to work on
 if get(hObject,'Value') == 1
     %[bp_list, bp_dir] = uigetfile(fullfile(svca4.outputPath, '*.nii;*.nii.gz'),'Select the BP images','MultiSelect','on');
-    bp_list = uipickfiles('FilterSpec',[svca4.outputPath]);
+    bp_list = uipickfiles('FilterSpec',[svca4.outputPath],'Prompt','Select the BP images.');
 end
 
 % get an output name for the results table
-outName = inputdlg('output file name?');
+% have a guess at the namr - will only work for pmod output file names.
+[a b] = fileparts(bp_list{1});
+partsA = strsplit(a, '/');
+partsB = strsplit(b, '_');
+outName = inputdlg('output file name?','',1,{[partsA{end} partsB{end}]});
 
 % load all label names
 load(fullfile(fileparts(which('svca4_mainGui')),'freeLabels.mat'))
