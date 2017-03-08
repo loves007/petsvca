@@ -32,4 +32,5 @@ for i = 1:length(bp_list)
         bp_voi(i,v) = mean(BP(indVOI));
     end
     outName = array2table(bp_voi,'variablenames',labels.Region);
+    outName.Subjects = svca4.Names;
 end

@@ -330,6 +330,8 @@ for i = 1:length(bp_list)
     end
 end
 bpTable = array2table(bp_voi,'variablenames',labels.Region);
+bpTable.Subjects = svca4.Names;
+
 uisave('bpTable',outName{1})
 
 % --- Executes on button press in copy_header.
@@ -361,4 +363,8 @@ function corr_bp_Callback(hObject, eventdata, handles)
 
 % --- Executes on button press in plot_BP.
 function plot_BP_Callback(hObject, eventdata, handles)
+global svca4
 
+if exist('svca4','var')
+    svca4_PlotBPvoiGui(svca4)
+end
