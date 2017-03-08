@@ -138,7 +138,7 @@ for r = 1:numel(handles.regions.Value) % for all regions
         x = ones(size(scat));
         % group 1
         x1 = x(GR.one,:);
-        scat1 = scat(GR.one,:)
+        scat1 = scat(GR.one,:);
         x1 = cumsum(x1,2);
         plot(x1,scat1,'*'); hold on
         %group 2
