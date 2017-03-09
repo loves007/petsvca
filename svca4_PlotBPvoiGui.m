@@ -22,7 +22,7 @@ function varargout = svca4_PlotBPvoiGui(varargin)
 
 % Edit the above text to modify the response to help svca4_PlotBPvoiGui
 
-% Last Modified by GUIDE v2.5 08-Mar-2017 11:29:26
+% Last Modified by GUIDE v2.5 09-Mar-2017 09:46:33
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -157,4 +157,64 @@ for r = 1:numel(handles.regions.Value) % for all regions
     title(labels.Region(handles.regions.Value(r)),'interpreter','none')
     
     ylabel('BP')
+end
+
+
+% --- Executes on button press in corrBP.
+function corrBP_Callback(hObject, eventdata, handles)
+% correlate the mean BP for a region calculated from different
+% reference region models.
+% NB: THERE IS SOME BAD HARDING CODING IN HERE!!!
+addpath(genpath('/Users/scott/Dropbox/MATLAB/Toolboxes/Corr_toolbox_v2'));
+
+% load region names
+load(fullfile(fileparts(which('svca4_mainGui')),'freeLabels.mat'));
+
+% get grouping
+GR.one = handles.list_subsGR1.Value;
+if isempty(find(strcmp(handles.list_subsGR2.String(handles.list_subsGR2.Value),'none')))
+    GR.two = handles.list_subsGR2.Value-1;
+end
+for m = 1:length(handles.bp_list)
+    load(handles.bp_list{m});
+    [tmp, tmp1] = fileparts(handles.bp_list{m});
+    
+    eval(['bpTables.' tmp1 '= bpTable;'])
+    modelName{m} = tmp1;
+end
+for r = 1:numel(handles.regions.Value) % for all regions
+    for m = 1:length(handles.bp_list)
+        % get BP values for each model
+        scat(:,m) = bpTables.(modelName{m}){:,handles.regions.Value(r)};
+    end
+    
+    %%% correlate %%%
+    [R,P,RL,RU] = corrcoef(scat,'rows','pairwise');
+    
+    figure;
+    imagesc(R);
+    colorbar;
+    set(gca,'YTickLabel',modelName)
+    set(gca,'XTickLabel',modelName)
+    set(gca,'TickLabelInterpreter','none')
+    set(gca,'XTickLabelRotation',30)
+    
+    figure;
+    nSub = numSubplots(size(scat,2));
+    for s = 1:size(scat,2)-1
+        ind = 2:size(scat,2);
+        ax(s) = subplot(nSub(1),nSub(2),s);
+        if numel(fieldnames(GR)) == 1 % if there is no grouping
+            scatter(scat(:,ind(s)),scat(:,1),'*');
+        else
+            scatter(scat(GR.one,ind(s)),scat(GR.one,1),'*'); hold on
+            scatter(scat(GR.two,ind(s)),scat(GR.two,1),'bs');
+        end
+        xlabel(modelName{ind(s)},'interpreter','none')
+        if s == 1; ylabel('BP Cerebellum');end
+        title(['r=' num2str(R(1,ind(s)))]);
+    end
+    set(ax,'YLim',[round(min(min(scat)),2) round(max(max(scat)),2)]);
+    set(ax,'XLim',[round(min(min(scat)),2) round(max(max(scat)),2)]);
+    
 end
