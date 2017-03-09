@@ -58,8 +58,12 @@ varargout{1} = handles.output;
 
 % --- Executes on button press in load_bp.
 function load_bp_Callback(hObject, eventdata, handles)
+global svca4
+if exist('svca4','var')    
+    bp_list = uipickfiles('FilterSpec',svca4.outputPath,'Prompt','Select the BP images.');
+else bp_list = uipickfiles('Prompt','Select the BP images.');
+end
 
-bp_list = uipickfiles('Prompt','Select the BP images.');
 load(bp_list{1})
 
 handles.list_subsGR1.String = bpTable.Subjects;
