@@ -22,7 +22,7 @@ function varargout = svca4_PlotBPvoiGui(varargin)
 
 % Edit the above text to modify the response to help svca4_PlotBPvoiGui
 
-% Last Modified by GUIDE v2.5 08-Mar-2017 11:29:26
+% Last Modified by GUIDE v2.5 10-Mar-2017 10:01:34
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -55,11 +55,15 @@ guidata(hObject, handles);
 function varargout = svca4_PlotBPvoiGui_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
+function out = gfn(in)
+out = flip(strtok(flip(in),'/'));
 
 % --- Executes on button press in load_bp.
 function load_bp_Callback(hObject, eventdata, handles)
+global svca4
 
 bp_list = uipickfiles('Prompt','Select the BP images.');
+
 load(bp_list{1})
 
 handles.list_subsGR1.String = bpTable.Subjects;
@@ -67,6 +71,11 @@ n = {'none'};
 handles.list_subsGR2.String = [n;bpTable.Subjects];
 
 handles.bp_list = bp_list;
+
+modelNames = cellfun(@gfn, bp_list,'UniformOutput',false);
+handles.models.String = modelNames;
+
+
 guidata(hObject, handles);
 
 % --- Executes on selection change in list_subsGR1.
@@ -112,7 +121,7 @@ GR.one = handles.list_subsGR1.Value;
 if isempty(find(strcmp(handles.list_subsGR2.String(handles.list_subsGR2.Value),'none')))
     GR.two = handles.list_subsGR2.Value-1;
 end
-numel(GR)
+
 for m = 1:length(handles.bp_list)
     load(handles.bp_list{m});
     [tmp, tmp1] = fileparts(handles.bp_list{m});
@@ -122,18 +131,20 @@ for m = 1:length(handles.bp_list)
 end
 
 for r = 1:numel(handles.regions.Value) % for all regions
-    for m = 1:length(handles.bp_list)
+    %clear scat
+    for m = 1:numel(handles.models.Value)
         % get BP values for each model
-        scat(:,m) = bpTables.(modelName{m}){:,handles.regions.Value(r)};
+        scat(:,m) = bpTables.(modelName{handles.models.Value(m)}){:,handles.regions.Value(r)};
     end
     %%% plot %%%
-    hf = figure;
+    hf = figure; set(hf,'color','w')
     hf.Color = 'w';
     
     if numel(fieldnames(GR)) == 1 % if there is no grouping
         x = ones(size(scat));
         x = cumsum(x,2);
         plot(x,scat,'*');
+        set(gca,'XTick',x(1,:));
     else % if there is a grouping
         x = ones(size(scat));
         % group 1
@@ -145,16 +156,92 @@ for r = 1:numel(handles.regions.Value) % for all regions
         x2 = x(GR.two,:);
         scat2 = scat(GR.two,:);
         x2 = cumsum(x2,2);
-        set(gca,'ColorOrderIndex',1)
+        set(gca,'ColorOrderIndex',1);
         plot(x2,scat2,'s');
+        set(gca,'XTick',x2(1,:));
     end
     xLim = xlim;
-    xlim([xLim(1)-0.5 xLim(2)+0.5])
+    xlim([xLim(1)-0.5 xLim(2)+0.5]);
     
-    set(gca,'XTickLabel',modelName)
-    set(gca,'TickLabelInterpreter','none')
-    set(gca,'XTickLabelRotation',30)
-    title(labels.Region(handles.regions.Value(r)),'interpreter','none')
+    set(gca,'XTickLabel',modelName(handles.models.Value));
+    set(gca,'TickLabelInterpreter','none');
+    set(gca,'XTickLabelRotation',30);
+    title(labels.Region(handles.regions.Value(r)),'interpreter','none');
     
     ylabel('BP')
+end
+
+
+% --- Executes on button press in corrBP.
+function corrBP_Callback(hObject, eventdata, handles)
+% correlate the mean BP for a region calculated from different
+% reference region models.
+% NB: THERE IS SOME BAD HARDING CODING IN HERE!!!
+addpath(genpath('/Users/scott/Dropbox/MATLAB/Toolboxes/Corr_toolbox_v2'));
+
+% load region names
+load(fullfile(fileparts(which('svca4_mainGui')),'freeLabels.mat'));
+
+% get grouping
+GR.one = handles.list_subsGR1.Value;
+if isempty(find(strcmp(handles.list_subsGR2.String(handles.list_subsGR2.Value),'none')))
+    GR.two = handles.list_subsGR2.Value-1;
+end
+for m = 1:numel(handles.models.Value)
+    load(handles.bp_list{handles.models.Value(m)});
+    [tmp, tmp1] = fileparts(handles.bp_list{handles.models.Value(m)});
+    
+    eval(['bpTables.' tmp1 '= bpTable;'])
+    modelName{handles.models.Value(m)} = tmp1;
+end
+for r = 1:numel(handles.regions.Value) % for all regions
+    for m = 1:numel(handles.models.Value)
+        % get BP values for each model
+        scat(:,m) = bpTables.(modelName{handles.models.Value(m)}){:,handles.regions.Value(r)};
+    end
+    
+    %%% correlate %%%
+    [R,P,RL,RU] = corrcoef(scat,'rows','pairwise');
+    
+    % display pairwise correlations
+    figure; set(gcf,'color','w')
+    imagesc(R);
+    set(gca,'XTick',1:length(R),'YTick',1:length(R));
+    colorbar;
+    set(gca,'XTickLabel',modelName(handles.models.Value),'YTickLabel',modelName(handles.models.Value));
+    set(gca,'TickLabelInterpreter','none');
+    set(gca,'XTickLabelRotation',30);
+    title(labels.Region(handles.regions.Value(r)),'interpreter','none');
+    
+    
+    figure; set(gcf,'color','w')
+    nSub = numSubplots(size(scat,2));
+    for s = 1:size(scat,2)-1
+        ind = 2:size(scat,2);
+        ax(s) = subplot(nSub(1),nSub(2),s);
+        if numel(fieldnames(GR)) == 1 % if there is no grouping
+            scatter(scat(:,ind(s)),scat(:,1),'*');
+        else
+            scatter(scat(GR.one,ind(s)),scat(GR.one,1),'*'); hold on
+            scatter(scat(GR.two,ind(s)),scat(GR.two,1),'bs');
+        end
+        xlabel(modelName{handles.models.Value(s+1)},'interpreter','none') % NB HARD CODED +1!!!!!
+        if s == 1; ylabel('BP Cerebellum');end
+        title(['r=' num2str(R(1,ind(s)))]);
+    end
+    set(ax,'YLim',[round(min(min(scat)),2) round(max(max(scat)),2)]);
+    set(ax,'XLim',[round(min(min(scat)),2) round(max(max(scat)),2)]);
+    
+end
+
+
+% --- Executes on selection change in models.
+function models_Callback(hObject, eventdata, handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function models_CreateFcn(hObject, eventdata, handles)
+
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
 end
