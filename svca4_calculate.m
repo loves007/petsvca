@@ -9,10 +9,10 @@ for targetID = svca4.targetIDs
     TSPO_sel = svca4.TSPO_sel; TSPO_sel(svca4.TSPO_sel==targetID) = [];
     
     % Get Classes from TAC_TABLE : GRAY WHITE BLOOD TSPO
-    CLASS(:,1) = nanmean(squeeze(svca4.TAC_TABLE_it00(GMWM_sel,1,:)),1);
-    CLASS(:,2) = nanmean(squeeze(svca4.TAC_TABLE_it00(GMWM_sel,2,:)),1);
-    CLASS(:,3) = nanmean(squeeze(svca4.TAC_TABLE_it00(BLOOD_sel,3,:)),1);
-    CLASS(:,4) = nanmean(squeeze(svca4.TAC_TABLE_it00(TSPO_sel,4,:)),1);
+    CLASS(:,1) = nanmean(squeeze(svca4.classes_it00(GMWM_sel,1,:)),1);
+    CLASS(:,2) = nanmean(squeeze(svca4.classes_it00(GMWM_sel,2,:)),1);
+    CLASS(:,3) = nanmean(squeeze(svca4.classes_it00(BLOOD_sel,3,:)),1);
+    CLASS(:,4) = nanmean(squeeze(svca4.classes_it00(TSPO_sel,4,:)),1);
     CLASS(isnan(CLASS)) = 0; % this might not be the best way but if we don't do it the regression doesn't work.
         
     %%% load brain mask %%%

@@ -131,6 +131,6 @@ for fi=svca4.classIDs
         end
     end
 end
-svca4.TAC_TABLE_it00 = TAC_TABLE;
+svca4.classes_it00 = TAC_TABLE;
 
 uisave({'svca4'}, 'svca4.mat')

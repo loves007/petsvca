@@ -33,10 +33,10 @@ guidata(hObject, handles);
 % This sets up the initial plot - only do when we are invisible
 % so window can get raised using svca4_plotclassgui.
 if strcmp(get(hObject,'Visible'),'off')
-    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.TAC_TABLE_it00(svca4.GMWM_sel,1,:))),'-b','LineWidth',2); hold on
-    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.TAC_TABLE_it00(svca4.GMWM_sel,2,:))),'-g','LineWidth',2)
-    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.TAC_TABLE_it00(svca4.BLOOD_sel,3,:))),'-r','LineWidth',2)
-    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.TAC_TABLE_it00(svca4.TSPO_sel,4,:))),'-k','LineWidth',2)
+    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.GMWM_sel,1,:))),'-b','LineWidth',2); hold on
+    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.GMWM_sel,2,:))),'-g','LineWidth',2)
+    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.BLOOD_sel,3,:))),'-r','LineWidth',2)
+    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.TSPO_sel,4,:))),'-k','LineWidth',2)
     legend('Grey','White','Blood','TSPO')
     xlabel('Time (sec)')
     set(gca,'FontSize',14)
@@ -57,10 +57,10 @@ cla;
 popup_sel_index = get(handles.plotChoice, 'Value');
 switch popup_sel_index
     case 1
-        plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.TAC_TABLE_it00(svca4.GMWM_sel,1,:))),'-b','LineWidth',4); hold on
-        plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.TAC_TABLE_it00(svca4.GMWM_sel,2,:))),'-g','LineWidth',4)
-        plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.TAC_TABLE_it00(svca4.BLOOD_sel,3,:))),'-r','LineWidth',4)
-        plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.TAC_TABLE_it00(svca4.TSPO_sel,4,:))),'-k','LineWidth',4)
+        plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.GMWM_sel,1,:))),'-b','LineWidth',4); hold on
+        plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.GMWM_sel,2,:))),'-g','LineWidth',4)
+        plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.BLOOD_sel,3,:))),'-r','LineWidth',4)
+        plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.TSPO_sel,4,:))),'-k','LineWidth',4)
         legend('Grey','White','Blood','TSPO')
         xlabel('Time (sec)')
         set(gca,'FontSize',20,'FontWeight','bold')
@@ -68,10 +68,10 @@ switch popup_sel_index
         figure;
         for s = svca4.BLOOD_sel
             subplot(2,4,s)
-            plot(svca4.PET_standardEndTimes,squeeze(svca4.TAC_TABLE_it00(s,3,:)),'-r','LineWidth',2); hold on
-            plot(svca4.PET_standardEndTimes,squeeze(svca4.TAC_TABLE_it00(s,1,:)),'-b','LineWidth',2);
-            plot(svca4.PET_standardEndTimes,squeeze(svca4.TAC_TABLE_it00(s,2,:)),'-g','LineWidth',2);
-            plot(svca4.PET_standardEndTimes,squeeze(svca4.TAC_TABLE_it00(s,4,:)),'-k','LineWidth',2); hold on
+            plot(svca4.PET_standardEndTimes,squeeze(svca4.classes_it00(s,3,:)),'-r','LineWidth',2); hold on
+            plot(svca4.PET_standardEndTimes,squeeze(svca4.classes_it00(s,1,:)),'-b','LineWidth',2);
+            plot(svca4.PET_standardEndTimes,squeeze(svca4.classes_it00(s,2,:)),'-g','LineWidth',2);
+            plot(svca4.PET_standardEndTimes,squeeze(svca4.classes_it00(s,4,:)),'-k','LineWidth',2); hold on
             
             %xlim([0 60])
             
@@ -79,19 +79,19 @@ switch popup_sel_index
         end
 %         for s = svca4.TSPO_sel
 %             subplot(2,4,svca4.TSPO_sel(s))
-%             plot(svca4.PET_standardEndTimes,squeeze(svca4.TAC_TABLE_it00(s,4,:)),'-k','LineWidth',2); hold on
+%             plot(svca4.PET_standardEndTimes,squeeze(svca4.classes_it00(s,4,:)),'-k','LineWidth',2); hold on
 %         end
         
         set(findall(gcf,'type','axes'),'ylim',[min(ys(:,1)) max(ys(:,2))])
         set(findall(gcf,'type','axes'),'xlim',[0 svca4.PET_standardEndTimes(end)])     % should remove the hard coding here
         set(findall(gcf,'type','axes'),'FontSize',12)
     case 3
-        plot(svca4.PET_standardEndTimes,squeeze(svca4.TAC_TABLE_it00(svca4.BLOOD_sel,3,:)),'LineWidth',2); hold on
+        plot(svca4.PET_standardEndTimes,squeeze(svca4.classes_it00(svca4.BLOOD_sel,3,:)),'LineWidth',2); hold on
         legend off
     case 4
         
-        plot(svca4.PET_standardEndTimes,squeeze(svca4.TAC_TABLE_it00(svca4.TSPO_sel,4,:)),'LineWidth',2); hold on
-        plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.TAC_TABLE_it00(svca4.TSPO_sel,4,:))),'--k','LineWidth',2);
+        plot(svca4.PET_standardEndTimes,squeeze(svca4.classes_it00(svca4.TSPO_sel,4,:)),'LineWidth',2); hold on
+        plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.TSPO_sel,4,:))),'--k','LineWidth',2);
         legend(cellstr(num2str(svca4.TSPO_sel')),'Average')
     case 5
         

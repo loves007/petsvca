@@ -332,17 +332,17 @@ leg{1} = 'it0';
 for its = 1:num_its % for each iteration
     ifeedback=its+1;
     
-    grey(its,:) = eval(sprintf('mean(squeeze(svca4.TAC_TABLE_q%d_it%.2d(svca4.GMWM_sel,1,:)))',q*100,its));
-    white(its,:) = eval(sprintf('mean(squeeze(svca4.TAC_TABLE_q%d_it%.2d(svca4.GMWM_sel,2,:)))',q*100,its));
-    blood(its,:) = eval(sprintf('mean(squeeze(svca4.TAC_TABLE_q%d_it%.2d(svca4.BLOOD_sel,3,:)))',q*100,its));
-    tspo(its,:) = eval(sprintf('mean(squeeze(svca4.TAC_TABLE_q%d_it%.2d(svca4.TSPO_sel,4,:)))',q*100,its));
+    grey(its,:) = eval(sprintf('mean(squeeze(svca4.classes_q%d_it%.2d(svca4.GMWM_sel,1,:)))',q*100,its));
+    white(its,:) = eval(sprintf('mean(squeeze(svca4.classes_q%d_it%.2d(svca4.GMWM_sel,2,:)))',q*100,its));
+    blood(its,:) = eval(sprintf('mean(squeeze(svca4.classes_q%d_it%.2d(svca4.BLOOD_sel,3,:)))',q*100,its));
+    tspo(its,:) = eval(sprintf('mean(squeeze(svca4.classes_q%d_it%.2d(svca4.TSPO_sel,4,:)))',q*100,its));
     leg{ifeedback} = sprintf('it%d',its);
 end
 
-grey = [mean(squeeze(svca4.TAC_TABLE_it00(svca4.GMWM_sel,1,:))); grey ];
-white = [mean(squeeze(svca4.TAC_TABLE_it00(svca4.GMWM_sel,2,:))); white ];
-blood = [mean(squeeze(svca4.TAC_TABLE_it00(svca4.BLOOD_sel,3,:))); blood ];
-tspo = [mean(squeeze(svca4.TAC_TABLE_it00(svca4.TSPO_sel,4,:))); tspo ];
+grey = [mean(squeeze(svca4.classes_it00(svca4.GMWM_sel,1,:))); grey ];
+white = [mean(squeeze(svca4.classes_it00(svca4.GMWM_sel,2,:))); white ];
+blood = [mean(squeeze(svca4.classes_it00(svca4.BLOOD_sel,3,:))); blood ];
+tspo = [mean(squeeze(svca4.classes_it00(svca4.TSPO_sel,4,:))); tspo ];
 
 figure; set(gcf,'color','white')
 plot(svca4.PET_standardEndTimes,grey,'LineWidth',2);

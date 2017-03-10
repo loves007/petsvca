@@ -63,10 +63,10 @@ set(hf,'color','w',...
     'paperposition',[0 0 xSi ySi],...
     'papersize',[xSi ySi])
 
-plot(svca4.PET_standardEndTimes,mean(squeeze(svca4.TAC_TABLE(svca4.BLOOD_sel,1,:))),'-b','LineWidth',lwidth); hold on
-plot(svca4.PET_standardEndTimes,mean(squeeze(svca4.TAC_TABLE(svca4.GMWM_sel,2,:))),'-g','LineWidth',lwidth)
-plot(svca4.PET_standardEndTimes,mean(squeeze(svca4.TAC_TABLE(svca4.GMWM_sel,3,:))),'-r','LineWidth',lwidth)
-plot(svca4.PET_standardEndTimes,mean(squeeze(svca4.TAC_TABLE(svca4.TSPO_sel,4,:))),'-k','LineWidth',lwidth)
+plot(svca4.PET_standardEndTimes,mean(squeeze(svca4.classes(svca4.BLOOD_sel,1,:))),'-b','LineWidth',lwidth); hold on
+plot(svca4.PET_standardEndTimes,mean(squeeze(svca4.classes(svca4.GMWM_sel,2,:))),'-g','LineWidth',lwidth)
+plot(svca4.PET_standardEndTimes,mean(squeeze(svca4.classes(svca4.GMWM_sel,3,:))),'-r','LineWidth',lwidth)
+plot(svca4.PET_standardEndTimes,mean(squeeze(svca4.classes(svca4.TSPO_sel,4,:))),'-k','LineWidth',lwidth)
 legend('Grey','White','Blood','TSPO')
 xlabel('Time (sec)')
 ylabel('normalized kBq/cc')
