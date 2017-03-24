@@ -1,6 +1,6 @@
-function [TAC_TABLE] = svca4_calculate_classes(svca4)
+function [TAC_TABLE,TAC_TABLEnn] = svca4_calculate_classes(svca4)
 
-clear TAC_TABLE
+clear TAC_TABLE TAC_TABLEnn
 global svca4
 
 svca4
@@ -75,14 +75,17 @@ for fi=svca4.classIDs
         
         vox_tm_max = max(firstFrames, [], 4);
         
-        BLOOD = zeros(1,svca4.nFrames); % BLOOD on normalized image
+        BLOOD = zeros(1,svca4.nFrames);
+        BLOODnn = zeros(1,svca4.nFrames);
         for j=1:svca4.BLOOD_num_pixels
             [~, ind] = max(vox_tm_max(:));
             [indx, indy, indz] = ind2sub([xDim yDim zDim], ind);
             BLOOD = BLOOD + squeeze(PET_norm(indx,indy,indz,1:svca4.nFrames))';
+            BLOODnn = BLOODnn + squeeze(PET(indx,indy,indz,1:svca4.nFrames))';
             vox_tm_max(indx, indy, indz) = 0;
         end
         TAC_TABLE(fi,3,1:svca4.nFrames) = squeeze(BLOOD/svca4.BLOOD_num_pixels);
+        TAC_TABLEnn(fi,3,1:svca4.nFrames) = squeeze(BLOODnn/svca4.BLOOD_num_pixels);
     end
     
     %%% GM/WM classes %%%
@@ -107,9 +110,13 @@ for fi=svca4.classIDs
             % GM
             tmp = single(MASK).*single(GM).*PET_norm(:,:,:,t);
             TAC_TABLE(fi,1,t) = mean(tmp(tmp~=0));
+            tmp = single(MASK).*single(GM).*PET(:,:,:,t);
+            TAC_TABLEnn(fi,1,t) = mean(tmp(tmp~=0));
             % WM
             tmp = single(MASK).*single(WM).*PET_norm(:,:,:,t);
             TAC_TABLE(fi,2,t) = mean(tmp(tmp~=0));
+            tmp = single(MASK).*single(WM).*PET(:,:,:,t);
+            TAC_TABLEnn(fi,2,t) = mean(tmp(tmp~=0));
         end
     end
     
@@ -128,9 +135,12 @@ for fi=svca4.classIDs
         for t=1:svca4.nFrames
             tmp = single(INF).*PET_norm(:,:,:,t);
             TAC_TABLE(fi,4,t) = mean(tmp(tmp~=0));
+            tmp = single(INF).*PET(:,:,:,t);
+            TAC_TABLEnn(fi,4,t) = mean(tmp(tmp~=0));
         end
     end
 end
 svca4.classes_it00 = TAC_TABLE;
+svca4.classesnn_it00 = TAC_TABLEnn;
 
 uisave({'svca4'}, 'svca4.mat')
