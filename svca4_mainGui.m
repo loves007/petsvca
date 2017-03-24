@@ -231,7 +231,9 @@ end
 % --- Executes on button press in plot_TACs.
 function plot_TACs_Callback(hObject, eventdata, handles)
 global svca4
-[filenames,pathname,filterindex] = uigetfile([svca4.outputPath filesep 'TACs' filesep '*.txt'],'MultiSelect', 'on');
+%[filenames,pathname,filterindex] = uigetfile([svca4.outputPath filesep 'TACs' filesep '*.txt'],'MultiSelect', 'on');
+filenames = uipickfiles('Prompt','Select the TACs.');
+[~,p,~] = cellfun(@fileparts,filenames, 'un', 0);
 
 hf = figure;
 set(hf,'color','white')
@@ -240,14 +242,14 @@ if ~iscell(filenames)
 end
 
 for f=1:size(filenames,2)
-    fname = fullfile(pathname,filenames{f});
+    %fname = fullfile(pathname,filenames{f});
     
-    tacTable = readtable(fname);
+    tacTable = readtable(filenames{f});
     tac(f,:) = tacTable.TAC_kBq_cc_;
 end
 plot(svca4.PET_standardEndTimes,tac,'linewidth',3)
 xlabel('Time after injection (sec)')
-hl = legend(filenames,'location','southoutside');
+hl = legend(p,'location','southoutside');
 set(hl,'Interpreter', 'none')
 
 % --- Executes on button press in subj_names.
