@@ -22,7 +22,7 @@ function varargout = svca4_extractRefGui(varargin)
 
 % Edit the above text to modify the response to help svca4_extractRefGui
 
-% Last Modified by GUIDE v2.5 26-Jan-2017 14:27:53
+% Last Modified by GUIDE v2.5 24-Mar-2017 14:46:22
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -227,6 +227,58 @@ for s = 1:length(handles.listsubs.Value)
     %         GRAYt(s,t) = sum(TEMP(:));
     %     end
     %     GRAYt(s,:) = GRAYt(s,:)/sum(GRAY(indGRAY));
+    %%
+    if handles.class.Value == 1 % blood
+        BLOOD_q = quantile(BLOOD(indBLOOD),0.9);
+        indBLOOD = intersect(indBLOOD, find(BLOOD.*MASK>BLOOD_q(1)));
+        for t=1:length(svca4.PET_standardDurations)
+            PET_t=PET(:,:,:,t);
+            TEMP = BLOOD(indBLOOD).*PET_t(indBLOOD);
+            BLOODtac(s,t) = sum(TEMP(:));
+        end
+        BLOODtac(s,:) = BLOODtac(s,:)/sum(BLOOD(indBLOOD));
+        myBLOODtac = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes BLOODtac(s,:)'];
+        fname = sprintf('%s/TACs/%s_svcaBLOOD_q90.txt', svca4.outputPath, svca4.Names{inds(s)});
+        fid = fopen(fname, 'w');
+        fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
+        fprintf(fid,'%.1f\t%.1f\t%.4f\n', myBLOODtac');
+        fclose(fid);
+    end
+    if handles.class.Value == 2 % GM
+        indGRAY = find(GRAY~=0);
+        GRAY_q = quantile(GRAY(indGRAY),0.9);
+        indGRAY = intersect(indGRAY, find(GRAY.*MASK>GRAY_q(1)));
+        
+        for t=1:length(svca4.PET_standardDurations)
+            PET_t=PET(:,:,:,t);
+            TEMP = GRAY(indGRAY).*PET_t(indGRAY);
+            GRAYtac9(s,t) = sum(TEMP(:));
+        end
+        GRAYtac9(s,:) = GRAYtac9(s,:)/sum(GRAY(indGRAY));
+        
+        myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes GRAYtac9(s,:)'];
+        fname = sprintf('%s/TACs/%s_svcaGRAY_q90.txt', svca4.outputPath, svca4.Names{inds(s)});
+        fid = fopen(fname, 'w');
+        fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
+        fprintf(fid,'%.1f\t%.1f\t%.4f\n', myGRAY_TAC');
+        fclose(fid);
+    end
+     if handles.class.Value == 3 % white
+        WHITE_q = quantile(WHITE(indWHITE),0.9);
+        indWHITE = intersect(indWHITE, find(WHITE.*MASK>WHITE_q(1)));
+        for t=1:length(svca4.PET_standardDurations)
+            PET_t=PET(:,:,:,t);
+            TEMP = WHITE(indWHITE).*PET_t(indWHITE);
+            WHITEtac(s,t) = sum(TEMP(:));
+        end
+        WHITEtac(s,:) = WHITEtac(s,:)/sum(WHITE(indWHITE));
+        myWHITEtac = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes WHITEtac(s,:)'];
+        fname = sprintf('%s/TACs/%s_svcaWHITE_q90.txt', svca4.outputPath, svca4.Names{inds(s)});
+        fid = fopen(fname, 'w');
+        fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
+        fprintf(fid,'%.1f\t%.1f\t%.4f\n', myWHITEtac');
+        fclose(fid);
+    end
 end
 % plot for the random selection version. Not using now
 % myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(GRAYt)'];
@@ -326,3 +378,13 @@ end
 
 % --- Executes on button press in remCereb.
 function remCereb_Callback(hObject, eventdata, handles)
+
+% --- Executes on selection change in class.
+function class_Callback(hObject, eventdata, handles)
+
+% --- Executes during object creation, after setting all properties.
+function class_CreateFcn(hObject, eventdata, handles)
+
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
