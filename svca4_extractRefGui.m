@@ -46,11 +46,6 @@ end
 
 % --- Executes just before svca4_extractRefGui is made visible.
 function svca4_extractRefGui_OpeningFcn(hObject, eventdata, handles, varargin)
-% This function has no output args, see OutputFcn.
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to svca4_extractRefGui (see VARARGIN)
 
 % Choose default command line output for svca4_extractRefGui
 handles.output = hObject;
@@ -58,8 +53,6 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes svca4_extractRefGui wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
 global svca4
 handles.listsubs.String = svca4.PET_list;
 handles.listsubs.Max = length(svca4.PET_list);
@@ -69,7 +62,6 @@ function varargout = svca4_extractRefGui_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
-
 
 % --- Executes on selection change in listsubs.
 function listsubs_Callback(hObject, eventdata, handles)
@@ -104,7 +96,7 @@ inds = handles.listsubs.Value; % indices to the subjects
 GRAYtac =  zeros(1,length(svca4.PET_standardDurations));
 
 for s = 1:length(handles.listsubs.Value)
-    ifeedback=str2num(handles.iteration.String); % this can be changed later
+    ifeedback=str2num(handles.iteration.String);
     q = str2num(handles.it_q.String);
     
     % load the brain mask
@@ -181,7 +173,7 @@ for s = 1:length(handles.listsubs.Value)
     fprintf('BLOOD selection : %d voxels remaining\n', numel(indGRAY));
     indGRAY = intersect(indGRAY, find(TSPO.*MASK<GRAY_q(4)));
     fprintf('TSPO selection : %d voxels remaining\n', numel(indGRAY));
-    %
+    
     %----------------------------------------------
     % - Calculate SVCA reference curve
     %----------------------------------------------
@@ -258,6 +250,8 @@ if handles.save_mean.Value == 1 && handles.remCereb.Value == 0
     figure;
     plot(svca4.PET_standardEndTimes,mean(GRAYtac))
 elseif handles.save_mean.Value == 1 && handles.remCereb.Value == 1
+    myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(GRAYtac)'];
+    
     if ifeedback == 0
         fname = sprintf('%s/TACs/mean_noCB_svcaRef_G%.2fW%.2fB%.2fT%.2f.txt', svca4.outputPath, svca4.quantiles);
     else fname = sprintf('%s/TACs/mean_noCB_svcaRef_q%d_it%.2d_G%.2fW%.2fB%.2fT%.2f.txt', svca4.outputPath, q*100,ifeedback,svca4.quantiles);

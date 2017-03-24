@@ -89,9 +89,7 @@ uiopen('load')
 
 % --- Executes on button press in create_svca4.
 function create_svca4_Callback(hObject, eventdata, handles)
-% hObject    handle to create_svca4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+
 svca4_createSVCAGui
 
 % --- Executes on button press in show_svca4.
@@ -112,8 +110,6 @@ end
 
 % --- Executes on button press in freesurfer.
 function freesurfer_Callback(hObject, eventdata, handles)
-% NB: Placeholder: use this button to open a gui that collects the
-% SUBJECTS_DIR, the subject and runs a recon-all
 global svca4
 if exist('svca4','var')
     svca4_freesurferGui(svca4)
@@ -138,7 +134,6 @@ if exist('svca4','var') && exist('TAC_TABLE','var')
     svca4_PlotClassGui(svca4,TAC_TABLE)
 else warndlg('Please load a TAC_TABLE and o structure first')
 end
-
 
 % --- Executes on button press in calc_svca4.
 function calc_svca4_Callback(hObject, eventdata, handles)
@@ -274,7 +269,6 @@ if exist('svca4','var')
     svca4_compareTacsGui(svca4)
 end
 
-
 % --- Executes on button press in bp_voi.
 function bp_voi_Callback(hObject, eventdata, handles)
 % This call will create a table containing the average BP value for
@@ -356,10 +350,8 @@ switch choice
         end
 end
 
-
 % --- Executes on button press in corr_bp.
 function corr_bp_Callback(hObject, eventdata, handles)
-
 
 % --- Executes on button press in plot_BP.
 function plot_BP_Callback(hObject, eventdata, handles)
