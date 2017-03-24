@@ -352,9 +352,6 @@ switch choice
         end
 end
 
-% --- Executes on button press in corr_bp.
-function corr_bp_Callback(hObject, eventdata, handles)
-
 % --- Executes on button press in plot_BP.
 function plot_BP_Callback(hObject, eventdata, handles)
 global svca4
