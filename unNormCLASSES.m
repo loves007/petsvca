@@ -22,18 +22,16 @@ for fi = 1:numel(svca4.PET_list)
     for t=1:svca4.nFrames
         PET_t = PET(:,:,:,t);
         vals  = PET_t(indMASK) - mean(PET_t(indMASK));
-        vals2(t) = std(vals(:));
+        frameSTD(t) = std(vals(:));        
         frameMean(t)  = mean(PET_t(indMASK));
-        frameSTD(t) = std(vals(:));
-        frameS(t) = std(PET_t(indMASK));
-        
     end
     
     CLASSES = squeeze(nanmean(svca4.classes_it00,1));
     
     repMean = repmat(frameMean,4,1,1);
-    repSTD = repmat(frameS,4,1,1);
+    repSTD = repmat(frameSTD,4,1,1);
     indCLASSES(:,:,fi) = (CLASSES.*repSTD)+repMean;
     figure; plot(svca4.PET_standardEndTimes,indCLASSES(:,:,fi)')
 end
-
+meanCLASSES = squeeze(nanmean(indCLASSES,3));
+leg = {'GM' 'WM' 'Blood' 'HSB-thalamus'}; 
