@@ -228,58 +228,75 @@ for s = 1:length(handles.listsubs.Value)
     %     end
     %     GRAYt(s,:) = GRAYt(s,:)/sum(GRAY(indGRAY));
     %%
-    if handles.class.Value == 1 % blood
-        BLOOD_q = quantile(BLOOD(indBLOOD),0.9);
-        indBLOOD = intersect(indBLOOD, find(BLOOD.*MASK>BLOOD_q(1)));
-        for t=1:length(svca4.PET_standardDurations)
-            PET_t=PET(:,:,:,t);
-            TEMP = BLOOD(indBLOOD).*PET_t(indBLOOD);
-            BLOODtac(s,t) = sum(TEMP(:));
-        end
-        BLOODtac(s,:) = BLOODtac(s,:)/sum(BLOOD(indBLOOD));
-        myBLOODtac = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes BLOODtac(s,:)'];
-        fname = sprintf('%s/TACs/%s_svcaBLOOD_q90.txt', svca4.outputPath, svca4.Names{inds(s)});
-        fid = fopen(fname, 'w');
-        fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
-        fprintf(fid,'%.1f\t%.1f\t%.4f\n', myBLOODtac');
-        fclose(fid);
+    BLOOD_q = quantile(BLOOD(indBLOOD),0.9);
+    indBLOOD = intersect(indBLOOD, find(BLOOD.*MASK>BLOOD_q(1)));
+    for t=1:length(svca4.PET_standardDurations)
+        PET_t=PET(:,:,:,t);
+        TEMP = BLOOD(indBLOOD).*PET_t(indBLOOD);
+        BLOODtac(s,t) = sum(TEMP(:));
     end
-    if handles.class.Value == 2 % GM
-        indGRAY = find(GRAY~=0);
-        GRAY_q = quantile(GRAY(indGRAY),0.9);
-        indGRAY = intersect(indGRAY, find(GRAY.*MASK>GRAY_q(1)));
-        
-        for t=1:length(svca4.PET_standardDurations)
-            PET_t=PET(:,:,:,t);
-            TEMP = GRAY(indGRAY).*PET_t(indGRAY);
-            GRAYtac9(s,t) = sum(TEMP(:));
-        end
-        GRAYtac9(s,:) = GRAYtac9(s,:)/sum(GRAY(indGRAY));
-        
-        myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes GRAYtac9(s,:)'];
-        fname = sprintf('%s/TACs/%s_svcaGRAY_q90.txt', svca4.outputPath, svca4.Names{inds(s)});
-        fid = fopen(fname, 'w');
-        fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
-        fprintf(fid,'%.1f\t%.1f\t%.4f\n', myGRAY_TAC');
-        fclose(fid);
+    BLOODtac(s,:) = BLOODtac(s,:)/sum(BLOOD(indBLOOD));
+    %         myBLOODtac = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes BLOODtac(s,:)'];
+    %         fname = sprintf('%s/TACs/%s_svcaBLOOD_q90.txt', svca4.outputPath, svca4.Names{inds(s)});
+    %         fid = fopen(fname, 'w');
+    %         fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
+    %         fprintf(fid,'%.1f\t%.1f\t%.4f\n', myBLOODtac');
+    %         fclose(fid);
+    indGRAY = find(GRAY~=0);
+    GRAY_q = quantile(GRAY(indGRAY),0.9);
+    indGRAY = intersect(indGRAY, find(GRAY.*MASK>GRAY_q(1)));
+    
+    for t=1:length(svca4.PET_standardDurations)
+        PET_t=PET(:,:,:,t);
+        TEMP = GRAY(indGRAY).*PET_t(indGRAY);
+        GRAYtac9(s,t) = sum(TEMP(:));
     end
-     if handles.class.Value == 3 % white
-        WHITE_q = quantile(WHITE(indWHITE),0.9);
-        indWHITE = intersect(indWHITE, find(WHITE.*MASK>WHITE_q(1)));
-        for t=1:length(svca4.PET_standardDurations)
-            PET_t=PET(:,:,:,t);
-            TEMP = WHITE(indWHITE).*PET_t(indWHITE);
-            WHITEtac(s,t) = sum(TEMP(:));
-        end
-        WHITEtac(s,:) = WHITEtac(s,:)/sum(WHITE(indWHITE));
-        myWHITEtac = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes WHITEtac(s,:)'];
-        fname = sprintf('%s/TACs/%s_svcaWHITE_q90.txt', svca4.outputPath, svca4.Names{inds(s)});
-        fid = fopen(fname, 'w');
-        fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
-        fprintf(fid,'%.1f\t%.1f\t%.4f\n', myWHITEtac');
-        fclose(fid);
+    GRAYtac9(s,:) = GRAYtac9(s,:)/sum(GRAY(indGRAY));
+    
+    myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes GRAYtac9(s,:)'];
+    %         fname = sprintf('%s/TACs/%s_svcaGRAY_q90.txt', svca4.outputPath, svca4.Names{inds(s)});
+    %         fid = fopen(fname, 'w');
+    %         fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
+    %         fprintf(fid,'%.1f\t%.1f\t%.4f\n', myGRAY_TAC');
+    %         fclose(fid);
+    WHITE_q = quantile(WHITE(indWHITE),0.9);
+    indWHITE = intersect(indWHITE, find(WHITE.*MASK>WHITE_q(1)));
+    for t=1:length(svca4.PET_standardDurations)
+        PET_t=PET(:,:,:,t);
+        TEMP = WHITE(indWHITE).*PET_t(indWHITE);
+        WHITEtac(s,t) = sum(TEMP(:));
     end
+    WHITEtac(s,:) = WHITEtac(s,:)/sum(WHITE(indWHITE));
+    %         myWHITEtac = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes WHITEtac(s,:)'];
+    %         fname = sprintf('%s/TACs/%s_svcaWHITE_q90.txt', svca4.outputPath, svca4.Names{inds(s)});
+    %         fid = fopen(fname, 'w');
+    %         fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
+    %         fprintf(fid,'%.1f\t%.1f\t%.4f\n', myWHITEtac');
+    %         fclose(fid);
+    TSPO_q = quantile(TSPO(indTSPO),0.9);
+    indTSPO = intersect(indTSPO, find(TSPO.*MASK>TSPO_q(1)));
+    for t=1:length(svca4.PET_standardDurations)
+        PET_t=PET(:,:,:,t);
+        TEMP = TSPO(indTSPO).*PET_t(indTSPO);
+        TSPOtac(s,t) = sum(TEMP(:));
+    end
+    TSPOtac(s,:) = TSPOtac(s,:)/sum(TSPO(indTSPO));
+    %         myTSPOtac = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes TSPOtac(s,:)'];
+    %         fname = sprintf('%s/TACs/%s_svcaTSPO_q90.txt', svca4.outputPath, svca4.Names{inds(s)});
+    %         fid = fopen(fname, 'w');
+    %         fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
+    %         fprintf(fid,'%.1f\t%.1f\t%.4f\n', myTSPOtac');
+    %         fclose(fid);
+    
+    %save svcaOutput.mat GRAYtac WHITEtac BLOODtac TSPOtac
 end
+svcaOutput.perImage = permute(cat(3,GRAYtac',WHITEtac',BLOODtac',TSPOtac'),[3 1 2]);
+svcaOutput.average = squeeze(nanmean(svcaOutput.perImage,3));
+svcaOutput.note = {'Weighted averages for each class with weights calculated from svca4_thal'};
+svcaOutput.imageInd = {'01_08'  '01_09'  '01_10'  '01_13'  '01_14'  '01_20'  '01_21'  '01_22'  '02_02'  '02_03'};
+
+
+save svcaOutput.mat refTACs
 % plot for the random selection version. Not using now
 % myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(GRAYt)'];
 % fname = sprintf('%s/TACs/mean_svcaRANDRef.txt', svca4.outputPath);
