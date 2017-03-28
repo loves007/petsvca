@@ -294,9 +294,9 @@ svcaOutput.perImage = permute(cat(3,GRAYtac',WHITEtac',BLOODtac',TSPOtac'),[3 1 
 svcaOutput.average = squeeze(nanmean(svcaOutput.perImage,3));
 svcaOutput.note = {'Weighted averages for each class with weights calculated from svca4_thal'};
 svcaOutput.imageInd = {'01_08'  '01_09'  '01_10'  '01_13'  '01_14'  '01_20'  '01_21'  '01_22'  '02_02'  '02_03'};
+svcaOutput.times = svca4.PET_standardEndTimes;
 
-
-save svcaOutput.mat refTACs
+save svcaOutput.mat svcaOutput
 % plot for the random selection version. Not using now
 % myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(GRAYt)'];
 % fname = sprintf('%s/TACs/mean_svcaRANDRef.txt', svca4.outputPath);
