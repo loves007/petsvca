@@ -122,7 +122,6 @@ function norm_Callback(hObject, eventdata, handles)
 function save_txt_Callback(hObject, eventdata, handles)
 
 
-
 function txt_name_Callback(hObject, eventdata, handles)
 
 % --- Executes during object creation, after setting all properties.

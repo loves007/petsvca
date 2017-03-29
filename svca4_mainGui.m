@@ -1,7 +1,7 @@
 function varargout = svca4_mainGui(varargin)
 % SVCA4_MAINGUI MATLAB code for svca4_mainGui.fig
 
-% Last Modified by GUIDE v2.5 09-Mar-2017 11:25:30
+% Last Modified by GUIDE v2.5 29-Mar-2017 13:27:22
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -358,4 +358,12 @@ global svca4
 
 if exist('svca4','var')
     svca4_PlotBPvoiGui(svca4)
+end
+
+
+% --- Executes on button press in tac_image.
+function tac_image_Callback(hObject, eventdata, handles)
+global svca4
+if exist('svca4','var')
+    svca4_imageTACGui(svca4)
 end
