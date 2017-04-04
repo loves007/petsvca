@@ -103,12 +103,12 @@ for s = 1:length(handles.listsubs.Value)
     
     % load the brain mask
     mname = fullfile(svca4.MASK_dir,svca4.MASK_list{inds(s)});
-    MASK_struct = load_nii(mname);
+    MASK_struct = load_untouch_nii(mname);
     MASK = single(MASK_struct.img);
     clear MASK_struct
     
     pname = fullfile(svca4.PET_dir,svca4.PET_list{inds(s)});
-    PET_struct = load_nii(pname);
+    PET_struct = load_untouch_nii(pname);
     PET = single(PET_struct.img);
     xDim = size(PET,1);
     yDim = size(PET,2);
@@ -133,7 +133,7 @@ for s = 1:length(handles.listsubs.Value)
     
     % load the blood mask
     bname = fullfile(svca4.BANANA_dir, svca4.BANANA_list{inds(s)});
-    BANANA_struct = load_nii(bname);
+    BANANA_struct = load_untouch_nii(bname);
     BANANA = single(BANANA_struct.img);
     BM4D = single(repmat(BANANA, [1 1 1 numel(svca4.BLOOD_frames)]));
     clear BANANA_struct

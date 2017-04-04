@@ -101,21 +101,21 @@ for s = 1:length(handles.listsubs.Value)
     
     % load the brain mask
     mname = fullfile(svca4.MASK_dir,svca4.MASK_list{inds(s)});
-    MASK_struct = load_nii(mname);
+    MASK_struct = load_untouch_nii(mname);
     MASK = single(MASK_struct.img);
     clear MASK_struct
     
     if handles.remCereb.Value == 1
         CB = fullfile(svca4.outputPath, 'roiMasks', [svca4.Names{inds(s)} '_' 'cerebellum_grey.nii.gz']);
         % load the brain mask
-        CB_struct = load_nii(CB);
+        CB_struct = load_untouch_nii(CB);
         CB_mask = single(CB_struct.img);
         clear CB_struct
         MASK = MASK-CB_mask;
     end
     
     pname = fullfile(svca4.PET_dir,svca4.PET_list{inds(s)});
-    PET_struct = load_nii(pname);
+    PET_struct = load_untouch_nii(pname);
     PET = single(PET_struct.img);
     xDim = size(PET,1);
     yDim = size(PET,2);
@@ -127,28 +127,28 @@ for s = 1:length(handles.listsubs.Value)
         fname = sprintf('%s/weights/%s_GRAY_it%.2d.nii', svca4.outputPath, svca4.Names{inds(s)}, ifeedback);
     else fname = sprintf('%s/weights/%s_GRAY_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{inds(s)}, q*100,ifeedback);
     end
-    GRAY = load_nii(fname);
+    GRAY = load_untouch_nii(fname);
     GRAY = GRAY.img;
     
     if ifeedback == 0
         fname = sprintf('%s/weights/%s_WHITE_it%.2d.nii', svca4.outputPath, svca4.Names{inds(s)}, ifeedback);
     else fname = sprintf('%s/weights/%s_WHITE_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{inds(s)}, q*100,ifeedback);
     end
-    WHITE = load_nii(fname);
+    WHITE = load_untouch_nii(fname);
     WHITE = WHITE.img;
     
     if ifeedback == 0
         fname = sprintf('%s/weights/%s_BLOOD_it%.2d.nii', svca4.outputPath, svca4.Names{inds(s)}, ifeedback);
     else fname = sprintf('%s/weights/%s_BLOOD_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{inds(s)}, q*100,ifeedback);
     end
-    BLOOD = load_nii(fname);
+    BLOOD = load_untouch_nii(fname);
     BLOOD = BLOOD.img;
     
     if ifeedback == 0
         fname = sprintf('%s/weights/%s_TSPO_it%.2d.nii', svca4.outputPath, svca4.Names{inds(s)}, ifeedback);
     else fname = sprintf('%s/weights/%s_TSPO_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{inds(s)}, q*100,ifeedback);
     end
-    TSPO = load_nii(fname);
+    TSPO = load_untouch_nii(fname);
     TSPO = TSPO.img;
     
     % ----------------------------------------
