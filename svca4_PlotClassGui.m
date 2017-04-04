@@ -33,10 +33,10 @@ guidata(hObject, handles);
 % This sets up the initial plot - only do when we are invisible
 % so window can get raised using svca4_plotclassgui.
 if strcmp(get(hObject,'Visible'),'off')
-    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.GMWM_sel,1,:))),'-b','LineWidth',2); hold on
-    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.GMWM_sel,2,:))),'-g','LineWidth',2)
-    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.BLOOD_sel,3,:))),'-r','LineWidth',2)
-    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classes_it00(svca4.TSPO_sel,4,:))),'-k','LineWidth',2)
+    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classesnn_it00(svca4.GMWM_sel,1,:))),'-b','LineWidth',2); hold on
+    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classesnn_it00(svca4.GMWM_sel,2,:))),'-g','LineWidth',2)
+    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classesnn_it00(svca4.BLOOD_sel,3,:))),'-r','LineWidth',2)
+    plot(svca4.PET_standardEndTimes,nanmean(squeeze(svca4.classesnn_it00(svca4.TSPO_sel,4,:))),'-k','LineWidth',2)
     legend('Grey','White','Blood','TSPO')
     xlabel('Time (sec)')
     set(gca,'FontSize',14)
