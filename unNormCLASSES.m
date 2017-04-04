@@ -1,6 +1,6 @@
 clear all; close all
 
-load('/Users/scott/Dropbox/Experiments/nideco/NIDECO/svca4_thal/svca4_thal.mat')
+load('/Users/scott/Dropbox/Experiments/nideco/NIDECO/svca4_thal2/test.mat')
 
 for fi = 1:numel(svca4.PET_list)
     
