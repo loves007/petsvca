@@ -31,7 +31,7 @@ function svca4_ClassGui_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = varargin{1};
 
 % change max frame dropdown
-tmp = load_nii_hdr(fullfile(handles.output.PET_dir,handles.output.PET_list{1}));
+tmp = load_untouch_header_only(fullfile(handles.output.PET_dir,handles.output.PET_list{1}));
 handles.max_frame.String = 1:tmp.dime.dim(5);
 handles.max_frame.Value = handles.output.nFrames;
 
