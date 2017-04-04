@@ -74,6 +74,7 @@ for fi=svca4.classIDs
         end
         
         vox_tm_max = max(firstFrames, [], 4);
+        out_blood_vox = zeros(size(vox_tm_max));
         
         BLOOD = zeros(1,svca4.nFrames); % BLOOD on normalized image
         for j=1:svca4.BLOOD_num_pixels
@@ -81,8 +82,15 @@ for fi=svca4.classIDs
             [indx, indy, indz] = ind2sub([xDim yDim zDim], ind);
             BLOOD = BLOOD + squeeze(PET_norm(indx,indy,indz,1:svca4.nFrames))';
             vox_tm_max(indx, indy, indz) = 0;
+            out_blood_vox(indx, indy, indz) = 1;
         end
         TAC_TABLE(fi,3,1:svca4.nFrames) = squeeze(BLOOD/svca4.BLOOD_num_pixels);
+        OUT_struct = MASK_struct;
+        OUT_struct.img = [];
+                
+        fname = sprintf('%s/BloodVoxels/%s_BloodVoxels.nii.gz', svca4.outputPath, svca4.Names{fi});
+        OUT_struct.img = single(out_blood_vox);
+        save_nii(OUT_struct, fname);
     end
     
     %%% GM/WM classes %%%
@@ -120,11 +128,11 @@ for fi=svca4.classIDs
         INF_struct = load_nii(INF_fname);
         INF = single(INF_struct.img); clear INF_struct;
         % it's not here we want to dilate!
-%         if svca4.TSPODilateParameter 
-%             %myStrel = strel(ones(svca4.TSPODilateParameter ,svca4.TSPODilateParameter ,svca4.TSPODilateParameter));
-%             %INF = imerode(INF, myStrel);
-%             INF = sffilt('min',INF,[svca4.TSPODilateParameter svca4.TSPODilateParameter svca4.TSPODilateParameter]);            
-%         end
+        %         if svca4.TSPODilateParameter
+        %             %myStrel = strel(ones(svca4.TSPODilateParameter ,svca4.TSPODilateParameter ,svca4.TSPODilateParameter));
+        %             %INF = imerode(INF, myStrel);
+        %             INF = sffilt('min',INF,[svca4.TSPODilateParameter svca4.TSPODilateParameter svca4.TSPODilateParameter]);
+        %         end
         for t=1:svca4.nFrames
             tmp = single(INF).*PET_norm(:,:,:,t);
             TAC_TABLE(fi,4,t) = mean(tmp(tmp~=0));
