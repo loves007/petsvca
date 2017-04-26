@@ -14,7 +14,7 @@ for targetID = svca4.targetIDs
     CLASS(:,3) = nanmean(squeeze(svca4.classes_it00(BLOOD_sel,3,:)),1);
     CLASS(:,4) = nanmean(squeeze(svca4.classes_it00(TSPO_sel,4,:)),1);
     CLASS(isnan(CLASS)) = 0; % this might not be the best way but if we don't do it the regression doesn't work.
-        
+    
     %%% load brain mask %%%
     MASK_struct = load_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{targetID}));
     MASK = single(MASK_struct.img);
@@ -49,8 +49,8 @@ for targetID = svca4.targetIDs
     
     % vectorizing target for speed
     PET_vector = reshape(PET_norm, xDim*yDim*zDim, svca4.nFrames);
-                CLASS(end+1,:) = 1;
-
+    % add ones to improve optimisation 
+    CLASS(end+1,:) = 1;
     for j = 1:size(PET_vector,1);
         if MASK(j) > 0
             TAC = squeeze(PET_vector(j,:)');
