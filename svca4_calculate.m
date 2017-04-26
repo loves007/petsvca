@@ -49,11 +49,14 @@ for targetID = svca4.targetIDs
     
     % vectorizing target for speed
     PET_vector = reshape(PET_norm, xDim*yDim*zDim, svca4.nFrames);
+                CLASS(end+1,:) = 1;
+
     for j = 1:size(PET_vector,1);
         if MASK(j) > 0
             TAC = squeeze(PET_vector(j,:)');
             TAC(isnan(TAC)) = 0;
             % fitting
+            TAC(end+1,:) = 1;
             par = lsqnonneg(CLASS,TAC);
             
             % filling parametric maps
@@ -90,6 +93,8 @@ for targetID = svca4.targetIDs
     fname = sprintf('%s/weights/%s_TSPO_it%.2d.nii', svca4.outputPath, svca4.Names{targetID}, ifeedback);
     OUT_struct.img = single(TSPO);
     save_nii(OUT_struct, fname);
+    
+    clear CLASS
     
 end
 display('DONE')
