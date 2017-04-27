@@ -175,12 +175,12 @@ for s = 1:length(svca4.PET_list) % loop on subjects
     
     CB = fullfile(svca4.outputPath, 'roiMasks', [svca4.Names{s} '_' 'cerebellum_grey.nii.gz']);
     % load the brain mask
-    CB_struct = load_nii(CB);
+    CB_struct = load_untouch_nii(CB);
     CB_mask = single(CB_struct.img);
     clear CB_struct
     
     pname = fullfile(svca4.PET_dir,svca4.PET_list{s});
-    PET_struct = load_nii(pname);
+    PET_struct = load_untouch_nii(pname);
     PET = single(PET_struct.img);
     xDim = size(PET,1);
     yDim = size(PET,2);
@@ -302,11 +302,11 @@ for i = 1:length(bp_list)
     bpf = bp_list{ind};
     
     %%% load all BP image %%%
-    BP_struct = load_nii(bpf);
+    BP_struct = load_untouch_nii(bpf);
     BP = single(BP_struct.img);
     
     %%% load all VOIs %%%
-    VOI_struct = load_nii([svca4.SUBJECTS_DIR filesep subj filesep 'label' filesep subj '_AparcAseg_in_PET.nii.gz']);
+    VOI_struct = load_untouch_nii([svca4.SUBJECTS_DIR filesep subj filesep 'label' filesep subj '_AparcAseg_in_PET.nii.gz']);
     VOI = single(VOI_struct.img);
     VOInums = unique(VOI);
     VOInums = VOInums(VOInums > 0);

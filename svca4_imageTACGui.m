@@ -88,11 +88,11 @@ global svca4
 %handles.petF{1}
 %handles.imageF{1}
 %%% load PET image %%%
-PET_struct = load_nii(handles.petF{1});
+PET_struct = load_untouch_nii(handles.petF{1});
 PET = single(PET_struct.img);
 
 %%% load mask %%%
-MASK_struct = load_nii(handles.imageF{1});
+MASK_struct = load_untouch_nii(handles.imageF{1});
 MASK = single(MASK_struct.img);
 
 %%% if the image is not binary threshold at 95% %%%

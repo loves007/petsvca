@@ -5,12 +5,12 @@ load('/Users/scott/Dropbox/Experiments/nideco/NIDECO/svca4_thal/svca4_thal.mat')
 for fi = 1:numel(svca4.PET_list)
     
     %%% load brain mask %%%
-    MASK_struct = load_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{fi}));
+    MASK_struct = load_untouch_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{fi}));
     MASK = single(MASK_struct.img);
     %clear MASK_struct
     
     %%% load PET image %%%
-    PET_struct = load_nii(fullfile(svca4.PET_dir, svca4.PET_list{fi}));
+    PET_struct = load_untouch_nii(fullfile(svca4.PET_dir, svca4.PET_list{fi}));
     PET = single(PET_struct.img);
     svca4.Res = PET_struct.hdr.dime.pixdim([2 4 3]); %
     xDim = size(PET,1);

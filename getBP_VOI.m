@@ -5,15 +5,15 @@ for s = 1:length(svca4.PET_list)
     subj = subj(1:5); % should remove this hard coding!!!
     
     %%% load VOI image %%%
-    VOI_struct = load_nii([svca4.outputPath '/roiMasks/' subj '_thalamus.nii.gz']);
+    VOI_struct = load_untouch_nii([svca4.outputPath '/roiMasks/' subj '_thalamus.nii.gz']);
     VOI = single(VOI_struct.img);
     indVOI = find(VOI==1);
     
-    BPc_struct = load_nii([svca4.outputPath '/petData_quantif/interfile_' subj '_pet_flip_CEREBa2_BPnd_SRTM2.nii']);
+    BPc_struct = load_untouch_nii([svca4.outputPath '/petData_quantif/interfile_' subj '_pet_flip_CEREBa2_BPnd_SRTM2.nii']);
     BPc = single(BPc_struct.img);
     thalBPc(s) = mean(BPc(indVOI));
     
-    BPs_struct = load_nii([svca4.outputPath '/petData_quantif/interfile_' subj '_pet_flip_SVCAa2_BPnd_SRTM2.nii']);
+    BPs_struct = load_untouch_nii([svca4.outputPath '/petData_quantif/interfile_' subj '_pet_flip_SVCAa2_BPnd_SRTM2.nii']);
     BPs = single(BPs_struct.img);
     thalBPs(s) = mean(BPs(indVOI));
 end
