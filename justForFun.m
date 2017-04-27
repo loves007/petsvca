@@ -38,8 +38,10 @@ for s = 1%:length(pet_files)
                 GRAYt(t) = sum(TEMP(:));
             end
             GRAYt(s,:) = GRAYt(:)/numel(randInds);
+            
             Output(n,b,:,s) = GRAYt;
         end
+        numel(randInds)
     end
 end
 
