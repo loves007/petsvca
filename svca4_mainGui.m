@@ -245,7 +245,7 @@ for f=1:size(filenames,2)
     %fname = fullfile(pathname,filenames{f});
     
     tacTable = readtable(filenames{f});
-    tac(f,:) = tacTable.TAC_kBq_cc_;
+    tac(f,:) = tacTable.TAC_1_1_;
 end
 plot(svca4.PET_standardEndTimes,tac,'linewidth',3)
 xlabel('Time after injection (sec)')

@@ -148,8 +148,11 @@ for s = 1:length(handles.subs.Value) % loop on subjects
     SEG = single(SEG_struct.img);
     clear SEG_Struct
     indsVOI = ismember(SEG,voiNums);
+    
     %%% load PET image %%%
-    PET_struct = load_untouch_nii(fullfile(svca4.PET_dir, svca4.PET_list{s}));
+    tt = strfind(svca4.Names,subj{s});
+    Index = find(not(cellfun('isempty', tt)));
+    PET_struct = load_untouch_nii(fullfile(svca4.PET_dir, svca4.PET_list{Index}));
     PET = single(PET_struct.img);
     svca4.Res = PET_struct.hdr.dime.pixdim([2 4 3]); %
     xDim = size(PET,1);
@@ -164,13 +167,21 @@ for s = 1:length(handles.subs.Value) % loop on subjects
                 vals(s,t)  = mean(PET_t(indsVOI));
             end
             if handles.save_txt.Value
-                myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes vals(s,:)'];
+                myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes vals(s,:)'*1000];
                 fname = sprintf('%s/TACs/%s_%s', svca4.outputPath, subj{s},handles.txt_name.String);
                 fid = fopen(fname, 'w');
-                fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
+                fprintf(fid,'start[seconds]\tend[seconds]\tTAC[1/1]\n');
                 fprintf(fid,'%.1f\t%.1f\t%.4f\n', myGRAY_TAC');
                 fclose(fid);
             end
+            %%%% testing - to be removed %%%%
+%             plotInds = zeros(xDim,yDim,zDim);
+%             plotInds(find(indsVOI)) = 1;
+%             close all;
+%             figure;
+%             image(squeeze(PET(:,:,45,18))); hold on
+%             im = imagesc(squeeze(plotInds(:,:,45))*100);im.AlphaData = .5;
+            %%%% end %%%%
         case 1
             %%% load brain mask %%%
             MASK_struct = load_untouch_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{s}));
@@ -188,10 +199,10 @@ for s = 1:length(handles.subs.Value) % loop on subjects
             end
             
             if handles.save_txt.Value
-                myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes vals(s,:)'];
+                myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes vals(s,:)'*1000];
                 fname = sprintf('%s/TACs/Norm_%s_%s', svca4.outputPath, subj{s},handles.txt_name.String);
                 fid = fopen(fname, 'w');
-                fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
+                fprintf(fid,'start[seconds]\tend[seconds]\tTAC[1/1]\n');
                 fprintf(fid,'%.1f\t%.1f\t%.4f\n', myGRAY_TAC');
                 fclose(fid);
             end
@@ -204,19 +215,19 @@ if size(vals) > 1
     plot(svca4.PET_standardEndTimes,mean(vals),'LineWidth',2)
     title('Mean VOI TAC')
     if handles.meanTAC.Value == 1
-        myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(vals)'];
+        myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(vals)'*1000];
         if handles.norm.Value
             fname = sprintf('%s/TACs/%s_%s', svca4.outputPath, 'Norm_mean',handles.txt_name.String);
         else fname = sprintf('%s/TACs/%s_%s', svca4.outputPath, 'mean',handles.txt_name.String);
         end
         fid = fopen(fname, 'w');
-        fprintf(fid,'start[seconds]\tend[seconds]\tTAC[kBq/cc]\n');
+        fprintf(fid,'start[seconds]\tend[seconds]\tTAC[1/1]\n');
         fprintf(fid,'%.1f\t%.1f\t%.4f\n', myGRAY_TAC');
         fclose(fid);
         handles.meanTAC.Value = 0;
     end
     
-else plot(svca4.PET_standardEndTimes,vals,'LineWidth',2)
+else plot(svca4.PET_standardEndTimes,vals*1000,'LineWidth',2)
     title('VOI TAC')
     
 end
