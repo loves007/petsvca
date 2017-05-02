@@ -167,7 +167,7 @@ for s = 1:length(handles.subs.Value) % loop on subjects
                 vals(s,t)  = mean(PET_t(indsVOI));
             end
             if handles.save_txt.Value
-                myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes vals(s,:)'*1000];
+                myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes vals(s,:)'];
                 fname = sprintf('%s/TACs/%s_%s', svca4.outputPath, subj{s},handles.txt_name.String);
                 fid = fopen(fname, 'w');
                 fprintf(fid,'start[seconds]\tend[seconds]\tTAC[1/1]\n');
@@ -199,7 +199,7 @@ for s = 1:length(handles.subs.Value) % loop on subjects
             end
             
             if handles.save_txt.Value
-                myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes vals(s,:)'*1000];
+                myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes vals(s,:)'];
                 fname = sprintf('%s/TACs/Norm_%s_%s', svca4.outputPath, subj{s},handles.txt_name.String);
                 fid = fopen(fname, 'w');
                 fprintf(fid,'start[seconds]\tend[seconds]\tTAC[1/1]\n');
@@ -215,7 +215,7 @@ if size(vals) > 1
     plot(svca4.PET_standardEndTimes,mean(vals),'LineWidth',2)
     title('Mean VOI TAC')
     if handles.meanTAC.Value == 1
-        myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(vals)'*1000];
+        myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(vals)'];
         if handles.norm.Value
             fname = sprintf('%s/TACs/%s_%s', svca4.outputPath, 'Norm_mean',handles.txt_name.String);
         else fname = sprintf('%s/TACs/%s_%s', svca4.outputPath, 'mean',handles.txt_name.String);
@@ -227,7 +227,7 @@ if size(vals) > 1
         handles.meanTAC.Value = 0;
     end
     
-else plot(svca4.PET_standardEndTimes,vals*1000,'LineWidth',2)
+else plot(svca4.PET_standardEndTimes,vals,'LineWidth',2)
     title('VOI TAC')
     
 end
@@ -235,9 +235,9 @@ xlabel('Time after injection (sec)')
 
 switch handles.norm.Value
     case 0
-        ylabel('kbq/cc')
+        ylabel('1/1')
     case 1
-        ylabel('normalized kbq/cc')
+        ylabel('normalized 1/1')
 end
 
 

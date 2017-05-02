@@ -183,7 +183,7 @@ for s = 1:length(handles.listsubs.Value)
     end
     
     % add times for saving
-    myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes GRAYtac(s,:)'*1000];
+    myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes GRAYtac(s,:)'];
     
     % - Write SVCA reference TAC to txt file
     if handles.save_txt.Value == 1 && handles.remCereb.Value == 0
@@ -209,7 +209,7 @@ for s = 1:length(handles.listsubs.Value)
     end
     
     figure;
-    plot(svca4.PET_standardEndTimes,GRAYtac(s,:)*1000)
+    plot(svca4.PET_standardEndTimes,GRAYtac(s,:))
     figure;
     imagesc(squeeze(PET(:,45,:,20)))
     figure;
@@ -238,7 +238,7 @@ end
 % fclose(fid);
 
 if handles.save_mean.Value == 1 && handles.remCereb.Value == 0
-    myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(GRAYtac)'*1000];
+    myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(GRAYtac)'];
     
     if ifeedback == 0
         fname = sprintf('%s/TACs/mean_svcaRef_G%.2fW%.2fB%.2fT%.2f.txt', svca4.outputPath, svca4.quantiles);
@@ -249,9 +249,9 @@ if handles.save_mean.Value == 1 && handles.remCereb.Value == 0
     fprintf(fid,'%.1f\t%.1f\t%.4f\n', myGRAY_TAC');
     fclose(fid);
     figure;
-    plot(svca4.PET_standardEndTimes,mean(GRAYtac)*1000)
+    plot(svca4.PET_standardEndTimes,mean(GRAYtac))
 elseif handles.save_mean.Value == 1 && handles.remCereb.Value == 1
-    myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(GRAYtac)'*1000];
+    myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes mean(GRAYtac)'];
     
     if ifeedback == 0
         fname = sprintf('%s/TACs/mean_noCB_svcaRef_G%.2fW%.2fB%.2fT%.2f.txt', svca4.outputPath, svca4.quantiles);
