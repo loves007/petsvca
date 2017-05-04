@@ -16,11 +16,11 @@ for targetID = svca4.targetIDs
     CLASS(isnan(CLASS)) = 0; % this might not be the best way but if we don't do it the regression doesn't work.
     
     %%% load brain mask %%%
-    MASK_struct = load_untouch_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{targetID}));
+    MASK_struct = load_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{targetID}));
     MASK = single(MASK_struct.img);
     
     %%% load target image %%%
-    TARGET_struct = load_untouch_nii(fullfile(svca4.PET_dir, svca4.PET_list{targetID}));
+    TARGET_struct = load_nii(fullfile(svca4.PET_dir, svca4.PET_list{targetID}));
     TARGET = single(TARGET_struct.img);
     %    svca4.Res = TARGET_struct.hdr.dime.pixdim([2 4 3]);
     xDim = size(TARGET,1);

@@ -35,12 +35,12 @@ for fi=svca4.classIDs
     svca4.PET_durations = svca4.PET_standardDurations;
     
     %%% load brain mask %%%
-    MASK_struct = load_untouch_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{fi}));
+    MASK_struct = load_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{fi}));
     MASK = single(MASK_struct.img);
     %clear MASK_struct
     
     %%% load PET image %%%
-    PET_struct = load_untouch_nii(fullfile(svca4.PET_dir, svca4.PET_list{fi}));
+    PET_struct = load_nii(fullfile(svca4.PET_dir, svca4.PET_list{fi}));
     PET = single(PET_struct.img);
     svca4.Res = PET_struct.hdr.dime.pixdim([2 4 3]); %
     xDim = size(PET,1);
@@ -66,7 +66,7 @@ for fi=svca4.classIDs
     if isBLOOD
         if isfield(svca4,'BANANA_list')
             BANANA_fname = fullfile(svca4.BANANA_dir, svca4.BANANA_list{fi});
-            BANANA_struct = load_untouch_nii(BANANA_fname);
+            BANANA_struct = load_nii(BANANA_fname);
             BANANA = single(BANANA_struct.img); clear BANANA_struct
             BM4D = repmat(BANANA, [1 1 1 numel(svca4.BLOOD_frames)]);
             firstFrames = PET_norm(:,:,:,svca4.BLOOD_frames).*single(BM4D);
@@ -92,7 +92,7 @@ for fi=svca4.classIDs
     isGMWM = any(svca4.GMWM_sel==fi);
     if isGMWM
         SEG_fname = fullfile(svca4.SEG_dir, svca4.SEG_list{fi});
-        SEG_struct = load_untouch_nii(SEG_fname);
+        SEG_struct = load_nii(SEG_fname);
         GM = single(SEG_struct.img).*MASK; clear SEG_struct;
         WM = GM; WM(WM~=2) = 0; WM(WM==2)=1;
         GM(GM~=1) = 0;
@@ -124,7 +124,7 @@ for fi=svca4.classIDs
     isINF = any(svca4.TSPO_sel==fi);
     if isINF
         INF_fname = fullfile(svca4.INF_dir, svca4.INF_list{fi});
-        INF_struct = load_untouch_nii(INF_fname);
+        INF_struct = load_nii(INF_fname);
         INF = single(INF_struct.img); clear INF_struct;
         % it's not here we want to dilate!
 %         if svca4.TSPODilateParameter 

@@ -144,7 +144,7 @@ inds = handles.subs.Value; % indices to the subjects
 for s = 1:length(handles.subs.Value) % loop on subjects
     
     %%% load segmentation image %%%
-    SEG_struct = load_untouch_nii(fullfile(svca4.SUBJECTS_DIR, subj{s}, 'label', [subj{s} '_AparcAseg_in_PET.nii.gz']));
+    SEG_struct = load_nii(fullfile(svca4.SUBJECTS_DIR, subj{s}, 'label', [subj{s} '_AparcAseg_in_PET.nii.gz']));
     SEG = single(SEG_struct.img);
     clear SEG_Struct
     indsVOI = ismember(SEG,voiNums);
@@ -152,7 +152,7 @@ for s = 1:length(handles.subs.Value) % loop on subjects
     %%% load PET image %%%
     tt = strfind(svca4.Names,subj{s});
     Index = find(not(cellfun('isempty', tt)));
-    PET_struct = load_untouch_nii(fullfile(svca4.PET_dir, svca4.PET_list{Index}));
+    PET_struct = load_nii(fullfile(svca4.PET_dir, svca4.PET_list{Index}));
     PET = single(PET_struct.img);
     svca4.Res = PET_struct.hdr.dime.pixdim([2 4 3]); %
     xDim = size(PET,1);
@@ -184,7 +184,7 @@ for s = 1:length(handles.subs.Value) % loop on subjects
             %%%% end %%%%
         case 1
             %%% load brain mask %%%
-            MASK_struct = load_untouch_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{s}));
+            MASK_struct = load_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{s}));
             MASK = single(MASK_struct.img);
             clear MASK_struct
             

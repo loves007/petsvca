@@ -15,11 +15,11 @@ for i = 1:length(bp_list)
     bpf = bp_list{ind};
     
     %%% load all BP image %%%
-    BP_struct = load_untouch_nii([bp_dir bpf]);
+    BP_struct = load_nii([bp_dir bpf]);
     BP = single(BP_struct.img);
     
     %%% load all VOIs %%%
-    VOI_struct = load_untouch_nii([svca4.SUBJECTS_DIR filesep subj filesep 'label' filesep subj '_AparcAseg_in_PET.nii.gz']);
+    VOI_struct = load_nii([svca4.SUBJECTS_DIR filesep subj filesep 'label' filesep subj '_AparcAseg_in_PET.nii.gz']);
     VOI = single(VOI_struct.img);
     VOInums = unique(VOI);
     VOInums = VOInums(VOInums > 0);

@@ -109,12 +109,12 @@ for its = 1:num_its % for each iteration
     
     for fi=svca4.classIDs % for each target subject
         %%% load brain mask %%%
-        MASK_struct = load_untouch_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{fi}));
+        MASK_struct = load_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{fi}));
         MASK = single(MASK_struct.img);
         clear MASK_struct
         
         %%% load PET image %%%
-        PET_struct = load_untouch_nii(fullfile(svca4.PET_dir, svca4.PET_list{fi}));
+        PET_struct = load_nii(fullfile(svca4.PET_dir, svca4.PET_list{fi}));
         PET = single(PET_struct.img);
         svca4.Res = PET_struct.hdr.dime.pixdim([2 4 3]); %
         xDim = size(PET,1);
@@ -141,7 +141,7 @@ for its = 1:num_its % for each iteration
                 fname = sprintf('%s/weights/%s_BLOOD_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, ifeedback);
             else fname = sprintf('%s/weights/%s_BLOOD_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, q*100,ifeedback);
             end
-            BLOOD = load_untouch_nii(fname);
+            BLOOD = load_nii(fname);
             BLOOD = BLOOD.img;
             BLOOD = BLOOD.*MASK;
             quant_BLOOD = quantile(BLOOD(BLOOD~=0),q);
@@ -169,7 +169,7 @@ for its = 1:num_its % for each iteration
                 fname = sprintf('%s/weights/%s_GRAY_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, ifeedback);
             else fname = sprintf('%s/weights/%s_GRAY_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, q*100,ifeedback);
             end
-            GRAY = load_untouch_nii(fname);
+            GRAY = load_nii(fname);
             GRAY = GRAY.img;
             GRAY = GRAY.*MASK;
             quant_GRAY = quantile(GRAY(GRAY~=0),q);
@@ -180,7 +180,7 @@ for its = 1:num_its % for each iteration
                 fname = sprintf('%s/weights/%s_WHITE_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, ifeedback);
             else fname = sprintf('%s/weights/%s_WHITE_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, q*100,ifeedback);
             end
-            WHITE = load_untouch_nii(fname);
+            WHITE = load_nii(fname);
             WHITE = WHITE.img;
             WHITE = WHITE.*MASK;
             quant_WHITE = quantile(WHITE(WHITE~=0),q);
@@ -204,7 +204,7 @@ for its = 1:num_its % for each iteration
                 fname = sprintf('%s/weights/%s_TSPO_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, ifeedback);
             else fname = sprintf('%s/weights/%s_TSPO_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, q*100,ifeedback);
             end
-            TSPO = load_untouch_nii(fname);
+            TSPO = load_nii(fname);
             TSPO = TSPO.img;
             TSPO = TSPO.*MASK;
             quant_TSPO = quantile(TSPO(TSPO~=0),q);
@@ -253,12 +253,12 @@ for its = 1:num_its % for each iteration
         CLASS(isnan(CLASS)) = 0; % this might not be the best approach but the regression cannot have NaNs
         
         %%% load brain mask %%%
-        MASK_struct = load_untouch_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{fi}));
+        MASK_struct = load_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{fi}));
         MASK = single(MASK_struct.img);
         clear MASK_struct
         
         %%% load target image %%%
-        TARGET_struct = load_untouch_nii(fullfile(svca4.PET_dir, svca4.PET_list{fi}));
+        TARGET_struct = load_nii(fullfile(svca4.PET_dir, svca4.PET_list{fi}));
         TARGET = single(TARGET_struct.img);
         xDim = size(TARGET,1);
         yDim = size(TARGET,2);
@@ -304,7 +304,7 @@ for its = 1:num_its % for each iteration
         %%% Save parametric maps %%%
         % NB: there is a L/R flip for the data needed but I'm not sure it
         % always will be!!!
-        OUT_struct = load_untouch_nii(sprintf('%s/%s', svca4.MRI_dir, svca4.MRI_list{fi}));
+        OUT_struct = load_nii(sprintf('%s/%s', svca4.MRI_dir, svca4.MRI_list{fi}));
         OUT_struct.img = [];
         
         fprintf('* Saving parametric maps for Target %d ...\n',fi);

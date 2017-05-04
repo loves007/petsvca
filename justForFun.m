@@ -18,16 +18,16 @@ for s = 1:length(pet_files)
     subj = pet_files(s).name(1:6);
     
     %%% load pet image %%%
-    PET_struct = load_untouch_nii(['/Users/scott/Dropbox/Experiments/nideco/NIDECO/svca4_avc/data_pet/' pet_files(s).name]);
+    PET_struct = load_nii(['/Users/scott/Dropbox/Experiments/nideco/NIDECO/svca4_avc/data_pet/' pet_files(s).name]);
     PET = single(PET_struct.img);
     
     %%% load brain mask %%%
-    %     BRAIN_struct = load_untouch_nii(['/Users/scott/Dropbox/Experiments/nideco/NIDECO/svca4_avc/roiMasks/' brain_files(s).name]);
+    %     BRAIN_struct = load_nii(['/Users/scott/Dropbox/Experiments/nideco/NIDECO/svca4_avc/roiMasks/' brain_files(s).name]);
     %     BRAIN = single(BRAIN_struct.img);
     %     indBRAIN = find(BRAIN==1);
     
     %%% load Grey mask %%%
-    GM_struct = load_untouch_nii(['/Users/scott/Dropbox/Experiments/nideco/NIDECO/svca4_avc/gmwm/' gmwm_files(s).name]);
+    GM_struct = load_nii(['/Users/scott/Dropbox/Experiments/nideco/NIDECO/svca4_avc/gmwm/' gmwm_files(s).name]);
     GM = single(GM_struct.img);
     indGM = find(GM==1);
     
