@@ -179,8 +179,10 @@ for s = 1:length(handles.listsubs.Value)
     %----------------------------------------------
     for t=1:length(svca4.PET_standardDurations)
         PET_t=PET(:,:,:,t);
-        GRAYtac(s,t) = mean(GRAY(indGRAY).*PET_t(indGRAY));
+        TEMP = GRAY(indGRAY).*PET_t(indGRAY);
+        GRAYtac(s,t) = sum(TEMP(:));
     end
+    GRAYtac(s,:) = GRAYtac(s,:)/sum(GRAY(indGRAY));
     
     % add times for saving
     myGRAY_TAC = [svca4.PET_standardStartTimes svca4.PET_standardEndTimes GRAYtac(s,:)'];
@@ -207,13 +209,14 @@ for s = 1:length(handles.listsubs.Value)
         fprintf(fid,'%.1f\t%.1f\t%.4f\n', myGRAY_TAC'); 
         fclose(fid);
     end
-    
-    figure;
-    plot(svca4.PET_standardEndTimes,GRAYtac(s,:))
-    figure;
-    imagesc(squeeze(PET(:,45,:,20)))
-    figure;
-    imagesc(squeeze(GRAY(:,45,:)))
+%%%%%%%%%%%% testing - can be removed %%%%%%%%%%%%%%%    
+%     figure;
+%     plot(svca4.PET_standardEndTimes,GRAYtac(s,:))
+%     figure;
+%     imagesc(squeeze(PET(:,45,:,20)))
+%     figure;
+%     imagesc(squeeze(GRAY(:,45,:)))
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% calculate a reference TAC but instead of using quantiles just remove half of the randomly selected voxels
     % don't really need this now and should really double check the code!
     %     indGRAY = find(GRAY~=0);
