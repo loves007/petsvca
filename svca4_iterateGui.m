@@ -128,7 +128,9 @@ for its = 1:num_its % for each iteration
         for t=1:svca4.nFrames
             PET_t = PET(:,:,:,t);
             vals  = PET_t(indMASK) - mean(PET_t(indMASK));
-            vals = vals/std(vals(:));
+            if std(vals(:)) ~= 0
+                vals = vals/std(vals(:));
+            end
             PET_t_norm = PET_norm(:,:,:,t);
             PET_t_norm(indMASK) = vals;
             PET_norm(:,:,:,t) = PET_t_norm;
@@ -271,7 +273,9 @@ for its = 1:num_its % for each iteration
         for t=1:svca4.nFrames
             PET_t = TARGET(:,:,:,t);
             vals  = PET_t(indMASK) - mean(PET_t(indMASK));
-            vals = vals/std(vals(:));
+            if std(vals(:)) ~= 0
+                vals = vals/std(vals(:));
+            end
             PET_t_norm = PET_norm(:,:,:,t);
             PET_t_norm(indMASK) = vals;
             PET_norm(:,:,:,t) = PET_t_norm;

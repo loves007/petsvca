@@ -1,7 +1,7 @@
 function [TAC_TABLE,TAC_TABLEnn] = svca4_calculate_classes(svca4)
 
 clear TAC_TABLE TAC_TABLEnn
-global svca4
+%global svca4
 
 svca4
 %%% %%%
@@ -54,7 +54,9 @@ for fi=svca4.classIDs
     for t=1:svca4.nFrames
         PET_t = PET(:,:,:,t);
         vals  = PET_t(indMASK) - mean(PET_t(indMASK));
-        vals = vals/std(vals(:));
+        if std(vals(:)) ~= 0
+            vals = vals/std(vals(:));
+        end
         PET_t_norm = PET_norm(:,:,:,t);
         PET_t_norm(indMASK) = vals;
         PET_norm(:,:,:,t) = PET_t_norm;
