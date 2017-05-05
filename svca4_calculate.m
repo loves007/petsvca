@@ -80,19 +80,19 @@ for targetID = svca4.targetIDs
     
     fname = sprintf('%s/weights/%s_GRAY_it%.2d.nii', svca4.outputPath, svca4.Names{targetID}, ifeedback);
     OUT_struct.img = single(GRAY);
-    save_untouch_nii(OUT_struct, fname);
+    save_nii(OUT_struct, fname);
     
     fname = sprintf('%s/weights/%s_WHITE_it%.2d.nii', svca4.outputPath, svca4.Names{targetID}, ifeedback);
     OUT_struct.img = single(WHITE);
-    save_untouch_nii(OUT_struct, fname);
+    save_nii(OUT_struct, fname);
     
     fname = sprintf('%s/weights/%s_BLOOD_it%.2d.nii', svca4.outputPath, svca4.Names{targetID}, ifeedback);
     OUT_struct.img = single(BLOOD);
-    save_untouch_nii(OUT_struct, fname);
+    save_nii(OUT_struct, fname);
     
     fname = sprintf('%s/weights/%s_TSPO_it%.2d.nii', svca4.outputPath, svca4.Names{targetID}, ifeedback);
     OUT_struct.img = single(TSPO);
-    save_untouch_nii(OUT_struct, fname);
+    save_nii(OUT_struct, fname);
     
     clear CLASS
     

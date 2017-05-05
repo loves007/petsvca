@@ -311,19 +311,19 @@ for its = 1:num_its % for each iteration
         
         fname = sprintf('%s/weights/%s_GRAY_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, q*100,its);
         OUT_struct.img = single(flip(GRAY));
-        save_untouch_nii(OUT_struct, fname);
+        save_nii(OUT_struct, fname);
         
         fname = sprintf('%s/weights/%s_WHITE_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, q*100,its);
         OUT_struct.img = single(flip(WHITE));
-        save_untouch_nii(OUT_struct, fname);
+        save_nii(OUT_struct, fname);
         
         fname = sprintf('%s/weights/%s_BLOOD_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, q*100,its);
         OUT_struct.img = single(flip(BLOOD));
-        save_untouch_nii(OUT_struct, fname);
+        save_nii(OUT_struct, fname);
         
         fname = sprintf('%s/weights/%s_TSPO_q%d_it%.2d.nii', svca4.outputPath, svca4.Names{fi}, q*100,its);
         OUT_struct.img = single(flip(TSPO));
-        save_untouch_nii(OUT_struct, fname);
+        save_nii(OUT_struct, fname);
     end
 end
 clear grey white blood tspo

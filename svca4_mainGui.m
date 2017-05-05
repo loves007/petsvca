@@ -69,14 +69,14 @@ if size(files,1) == 1
     PET_struct = load_nii(pname);
     PET_struct.img = flip(PET_struct.img,4);
     fname = [pname(1:end-4) '_flip.nii'];
-    save_untouch_nii(PET_struct, fname);
+    save_nii(PET_struct, fname);
 elseif size(files,1) > 1
     for s = 1:length(files)
         pname = fullfile(filepath,files(s));
         PET_struct = load_nii(pname);
         PET_struct.img = flip(PET_struct.img,4);
         fname = [pname(1:end-4) '_flipTime.nii'];
-        save_untouch_nii(PET_struct, fname);
+        save_nii(PET_struct, fname);
     end
 end
 
@@ -348,7 +348,7 @@ switch choice
             change = load_nii(change_files{i});
             out = orig;
             out.img = change.img;
-            save_untouch_nii(out,change_files{i})
+            save_nii(out,change_files{i})
         end
 end
 

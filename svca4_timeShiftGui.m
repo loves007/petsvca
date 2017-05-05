@@ -196,5 +196,5 @@ for s = 1:length(handles.listsubs.Value)
     % save the normalized and shifted dynamic PET data
     oname = fullfile(svca4.PET_dir, [svca4.PET_list{inds(s)}(1:end-4) '_norm_shift_' num2str(peak_diff) '.nii']);
     PET_struct.img = single(flip(PET_shift));
-    %save_untouch_nii(PET_struct, oname)
+    %save_nii(PET_struct, oname)
 end
