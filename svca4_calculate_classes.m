@@ -36,12 +36,12 @@ for fi=svca4.classIDs
     
     %%% load brain mask %%%
     MASK_struct = load_nii(fullfile(svca4.MASK_dir, svca4.MASK_list{fi}));
-    MASK = single(MASK_struct.img);
+    MASK = MASK_struct.img;
     %clear MASK_struct
     
     %%% load PET image %%%
     PET_struct = load_nii(fullfile(svca4.PET_dir, svca4.PET_list{fi}));
-    PET = single(PET_struct.img);
+    PET = PET_struct.img;
     svca4.Res = PET_struct.hdr.dime.pixdim([2 4 3]); %
     xDim = size(PET,1);
     yDim = size(PET,2);
@@ -53,13 +53,17 @@ for fi=svca4.classIDs
     PET_norm = zeros(xDim,yDim,zDim,svca4.nFrames);
     for t=1:svca4.nFrames
         PET_t = PET(:,:,:,t);
+        PET_mask(:,:,:,t) = PET_t.*MASK;
         vals  = PET_t(indMASK) - mean(PET_t(indMASK));
         if std(vals(:)) ~= 0
             vals = vals/std(vals(:));
+        else vals = vals/1; % keep away the NaN
         end
         PET_t_norm = PET_norm(:,:,:,t);
         PET_t_norm(indMASK) = vals;
         PET_norm(:,:,:,t) = PET_t_norm;
+        meanBrain(t) = mean(PET_t(indMASK));
+        stdBrain(t) = std(PET_t(indMASK));
     end
     
     
@@ -72,7 +76,8 @@ for fi=svca4.classIDs
             BANANA = single(BANANA_struct.img); clear BANANA_struct
             BM4D = repmat(BANANA, [1 1 1 numel(svca4.BLOOD_frames)]);
             firstFrames = PET_norm(:,:,:,svca4.BLOOD_frames).*single(BM4D);
-        else firstFrames = PET_norm(:,:,:,svca4.BLOOD_frames);
+        else %firstFrames = PET_norm(:,:,:,svca4.BLOOD_frames);
+            firstFrames = PET_mask(:,:,:,svca4.BLOOD_frames);
         end
         
         vox_tm_max = max(firstFrames, [], 4);
@@ -80,12 +85,14 @@ for fi=svca4.classIDs
         BLOOD = zeros(1,svca4.nFrames);
         BLOODnn = zeros(1,svca4.nFrames);
         for j=1:svca4.BLOOD_num_pixels
-            [~, ind] = max(vox_tm_max(:));
-            [indx, indy, indz] = ind2sub([xDim yDim zDim], ind);
+            [vv(j), ind(j)] = max(vox_tm_max(:));
+            [indx, indy, indz] = ind2sub([xDim yDim zDim], ind(j));
             BLOOD = BLOOD + squeeze(PET_norm(indx,indy,indz,1:svca4.nFrames))';
+            allBlood(j,:) = squeeze(PET_mask(indx,indy,indz,1:svca4.nFrames))';
             BLOODnn = BLOODnn + squeeze(PET(indx,indy,indz,1:svca4.nFrames))';
             vox_tm_max(indx, indy, indz) = 0;
         end
+        
         TAC_TABLE(fi,3,1:svca4.nFrames) = squeeze(BLOOD/svca4.BLOOD_num_pixels);
         TAC_TABLEnn(fi,3,1:svca4.nFrames) = squeeze(BLOODnn/svca4.BLOOD_num_pixels);
     end
